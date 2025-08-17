@@ -1,0 +1,24 @@
+CREATE TABLE factories (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE sites (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  factoryId INTEGER NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  FOREIGN KEY(factoryId) REFERENCES factories(id)
+);
+
+CREATE TABLE equipment (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE sites_equipment (
+  siteId INTEGER NOT NULL,
+  equipmentId INTEGER NOT NULL,
+  PRIMARY KEY(siteId, equipmentId),
+  FOREIGN KEY(siteId) REFERENCES sites(id),
+  FOREIGN KEY(equipmentId) REFERENCES equipment(id)
+);
