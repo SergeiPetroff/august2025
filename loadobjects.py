@@ -74,4 +74,4 @@ def test_LoadObjects():
   res5 = loadobjects('Site', 'child', 0, {'id':2, 'factoryId': 1, 'name': 'site2'}, dbi)
   return res, res1, res2, res3, res4, res5
 
-print(test_LoadObjects())
+# print(test_LoadObjects())

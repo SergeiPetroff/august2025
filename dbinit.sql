@@ -7,7 +7,7 @@ CREATE TABLE sites (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   factoryId INTEGER NOT NULL,
   name VARCHAR(255) NOT NULL,
-  FOREIGN KEY(factoryId) REFERENCES factories(id)
+  FOREIGN KEY(factoryId) REFERENCES factories(id) ON DELETE NO ACTION
 );
 
 CREATE TABLE equipment (

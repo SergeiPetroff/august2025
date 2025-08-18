@@ -1,9 +1,9 @@
 <html>
     <body>
-        <a href="/sites">Участки</a>
+        <a href="/factories">Фабрики</a>
         <a href="/equipment">Оборудование</a>
         <table border="3">
-            <caption>Фабрики</caption>
+            <caption>Участки</caption>
             <tr>
                 <th>Название</th>
             </tr>
@@ -12,11 +12,12 @@
             {% endfor %}
         </table>
         <form method="POST" action="create">
-            Новая Фабрика: <input type="text" name="factory_name", value="FactoryN">
+            Новый участок: <input type="text" name="site_name", value="SiteN">
+            Фабрика участка: <input type="text" name="factory_name", value="FactoryN">
             <input type="submit" value="Submit">
         </form>
         <form method="POST" action="delete">
-            Удалить фабрику: <input type="text" name="factory_name", value="FactoryN">
+            Удалить участок: <input type="text" name="site_name", value="SiteN">
             <input type="submit" value="Submit">
         </form>
         {% include 'components/flash.html' %}
