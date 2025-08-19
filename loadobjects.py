@@ -3,6 +3,7 @@ from sqlalchemy import select, distinct
 import db
 
 def loadobjects(tableName, relative, level, startObject, dbi):
+  '''Функция, которая для каждого справочника возвращает все Родительские/Дочерние объекты произвольного уровня'''
   if tableName == 'Factory':
     if relative == 'child':
       if level not in (0, 1):

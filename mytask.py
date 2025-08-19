@@ -154,6 +154,7 @@ def placement_create():
             print(factory_id, site_id, equipment_id)
 
             insertion_query = dbi.sites_equipment_table.insert().values({'siteId': site_id, 'equipmentId': equipment_id})
+            print(insertion_query)
 
             connection.execute(insertion_query)
             connection.commit()
