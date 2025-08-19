@@ -79,9 +79,11 @@ def sites_delete():
     if request.method == 'POST':
         # Retrieve data for each row/column based on the 'name' attributes
         site_name = request.form.get('site_name')
+        factory_name = request.form.get('factory_name')
         with dbi.engine.connect() as connection:
-            # delete_query = sql.delete(dbi.factories_table).where(dbi.factories_table.columns.id==factory_id)
-            delete_query = sql.delete(dbi.sites_table).where(dbi.sites_table.columns.name==site_name)
+            result = connection.execute(select(dbi.factories_table).where(dbi.factories_table.columns.name==factory_name))
+            factory_id = result.__next__()[0]
+            delete_query = sql.delete(dbi.sites_table).where(dbi.sites_table.columns.name==site_name, dbi.sites_table.columns.factoryId==factory_id)
             print(delete_query)
             try:
                 connection.execute(delete_query)
@@ -99,25 +101,87 @@ def equipment():
           data.append(dict(id = row[0], name = row[1]))
     return render_template('equipment.html', items=data)
 
-
 @app.route('/equipment/create/', methods=['POST'])
 def equipment_create():
     if request.method == 'POST':
         # Retrieve data for each row/column based on the 'name' attributes
         equipment_name = request.form.get('equipment_name')
-        site_name = request.form.get('site_name')
         with dbi.engine.connect() as connection:
-            result1 = connection.execute(select(dbi.sites_table).where(dbi.sites_table.columns.name==site_name))
-            site_id = result1.__next__()[0]
-            insertion_query1 = dbi.equipment_table.insert().values({'name': equipment_name})
-            connection.execute(insertion_query1)
-            connection.commit()
-            result2 = connection.execute(select(dbi.equipment_table).where(dbi.equipment_table.columns.name==equipment_name))
-            equipment_id = result2.__next__()[0]
-            insertion_query2 = dbi.sites_equipment_table.insert().values({'siteId': site_id, 'equipmentId': equipment_id})
-            connection.execute(insertion_query2)
+            insertion_query = dbi.equipment_table.insert().values({'name': equipment_name})
+            connection.execute(insertion_query)
             connection.commit()
     return redirect('/equipment')
+
+@app.route('/equipment/delete/', methods=['POST'])
+def equipment_delete():
+    if request.method == 'POST':
+        # Retrieve data for each row/column based on the 'name' attributes
+        equipment_name = request.form.get('equipment_name')
+        with dbi.engine.connect() as connection:
+            # delete_query = sql.delete(dbi.factories_table).where(dbi.factories_table.columns.id==factory_id)
+            delete_query = sql.delete(dbi.equipment_table).where(dbi.equipment_table.columns.name==equipment_name)
+            print(delete_query)
+            try:
+                connection.execute(delete_query)
+                connection.commit()
+            except IntegrityError as e:
+                flash('Ошибка удаления оборудования: удалите сначала его размещение в цехе.', 'info')
+    return redirect('/equipment')
+
+@app.route('/placements/', methods=['GET', 'POST'])
+def placements():
+    data = []
+    '''with dbi.engine.connect() as connection:
+        result = connection.execute(select(dbi.factories_table))
+        for row in result:
+          data.append(dict(id = row[0], name = row[1]))'''
+    return render_template('placements.html', items=data)
+
+@app.route('/placements/create/', methods=['POST'])
+def placement_create():
+    if request.method == 'POST':
+        # Retrieve data for each row/column based on the 'name' attributes
+        factory_name = request.form.get('factory_name')
+        site_name = request.form.get('site_name')
+        equipment_name = request.form.get('equipment_name')
+        with dbi.engine.connect() as connection:
+            result1 = connection.execute(select(dbi.factories_table).where(dbi.factories_table.columns.name==factory_name))
+            factory_id = result1.__next__()[0]
+            result2 = connection.execute(select(dbi.sites_table).where(dbi.sites_table.columns.name==site_name, dbi.sites_table.columns.factoryId==factory_id))
+            site_id = result2.__next__()[0]
+            result3 = connection.execute(select(dbi.equipment_table).where(dbi.equipment_table.columns.name==equipment_name))
+            equipment_id = result3.__next__()[0]
+            print(factory_id, site_id, equipment_id)
+
+            insertion_query = dbi.sites_equipment_table.insert().values({'siteId': site_id, 'equipmentId': equipment_id})
+
+            connection.execute(insertion_query)
+            connection.commit()
+    return redirect('/placements')
+
+@app.route('/placements/delete/', methods=['POST'])
+def placement_delete():
+    if request.method == 'POST':
+        # Retrieve data for each row/column based on the 'name' attributes
+        factory_name = request.form.get('factory_name')
+        site_name = request.form.get('site_name')
+        equipment_name = request.form.get('equipment_name')
+        with dbi.engine.connect() as connection:
+            result1 = connection.execute(select(dbi.factories_table).where(dbi.factories_table.columns.name==factory_name))
+            factory_id = result1.__next__()[0]
+            result2 = connection.execute(select(dbi.sites_table).where(dbi.sites_table.columns.name==site_name, dbi.sites_table.columns.factoryId==factory_id))
+            site_id = result2.__next__()[0]
+            result3 = connection.execute(select(dbi.equipment_table).where(dbi.equipment_table.columns.name==equipment_name))
+            equipment_id = result3.__next__()[0]
+            print(factory_id, site_id, equipment_id)
+            delete_query = sql.delete(dbi.sites_equipment_table).where(dbi.sites_equipment_table.columns.siteId==site_id, dbi.sites_equipment_table.columns.equipmentId==equipment_id)
+            print(delete_query)
+            try:
+                connection.execute(delete_query)
+                connection.commit()
+            except IntegrityError as e:
+                flash('Ошибка удаления размещения: такого нет', 'info')
+    return redirect('/placements')
 
 
 if __name__ == '__main__':

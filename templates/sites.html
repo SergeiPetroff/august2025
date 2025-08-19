@@ -2,6 +2,7 @@
     <body>
         <a href="/factories">Фабрики</a>
         <a href="/equipment">Оборудование</a>
+        <a href="/placements">Размещения</a>
         <table border="3">
             <caption>Участки</caption>
             <tr>
@@ -18,6 +19,7 @@
         </form>
         <form method="POST" action="delete">
             Удалить участок: <input type="text" name="site_name", value="SiteN">
+            Фабрика участка: <input type="text" name="factory_name", value="FactoryN">
             <input type="submit" value="Submit">
         </form>
         {% include 'components/flash.html' %}

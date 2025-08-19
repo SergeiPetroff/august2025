@@ -1,0 +1,28 @@
+<html>
+    <body>
+        <a href="/sites">Участки</a>
+        <a href="/equipment">Оборудование</a>
+        <!--<table border="3">
+            <caption>Размещение</caption>
+            <tr>
+                <th>Название</th>
+            </tr>
+            {% for item in items %}
+               <tr><td>{{ item.name }}</td></tr>
+            {% endfor %}
+        </table>-->
+        <form method="POST" action="create">
+            Создать размещение: <input type="text" name="factory_name", value="FactoryN">
+            <input type="text" name="site_name", value="SiteN">
+            <input type="text" name="equipment_name", value="EquipmentN">
+            <input type="submit" value="Submit">
+        </form>
+        <form method="POST" action="delete">
+            Удалить размещение: <input type="text" name="factory_name", value="FactoryN">
+            <input type="text" name="site_name", value="SiteN">
+            <input type="text" name="equipment_name", value="EquipmentN">
+            <input type="submit" value="Submit">
+        </form>
+        {% include 'components/flash.html' %}
+    </body>
+</html>
