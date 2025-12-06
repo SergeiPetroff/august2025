@@ -1,0 +1,59 @@
+<html>
+    <head>
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    </head>
+    <body>
+        {% include 'components/nav.html' %}
+        <div class="container">
+          <h1>{{site.name}}</h1>
+          <h2>
+            <a href="/factories/show?id={{site.factory.id}}">{{site.factory.name}}</a> 
+          </h2>
+        </div>
+        <div class="container">
+            <table class="table table-striped table-bordered caption-top align-middle">
+                <caption>Оборудование</caption>
+                <tr>
+                    <th>Название</th>
+                    <th></th>
+                </tr>
+                {% for equipment in site.equipment %}
+                <tr><td>{{ equipment.name }}</td>
+                    <td>
+                        <form method="POST" action="/placements/delete" class="form-inline m-0 d-inline">
+                          <input type="hidden" name="site_id" value="{{ site.id }}">  
+                          <input type="hidden" name="equipment_id" value="{{ equipment.id }}">
+                          <input type="submit" value="Списать" class="btn btn-warning btn-sm">
+                        </form>
+                        <a href="/equipment/show?id={{equipment.id}}" class="btn btn-primary btn-sm">Подробнее</a>                   
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="container">
+            <form method="POST" action="/placements/create">
+              <input type="hidden" name="site_id", value="{{site.id}}">
+              <div class="row g-2">
+                <label class="col-form-label col-2">Название оборудования:</label>
+                <div class="col">
+                  <select class="form-select" name="equipment_id">
+                    <option selected>Open this select menu</option>
+                    {% for equipment in equipment_all %}
+                      <option value="{{equipment.id}}"> {{equipment.name}} </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col">
+                  <input type="submit" value="Добавить" class="btn btn-success">
+                </div>
+              </div>
+            </form>
+        </div>
+        <div class="container">
+          <a href="/sites/add_equipment?id={{site.id}}" class="btn btn-success">Добавить оборудование</a> 
+        </div>
+        {% include 'components/flash.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    </body>
+</html>
